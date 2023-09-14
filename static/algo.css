@@ -5,7 +5,7 @@ body {
 input{
     background-color: #B7DB97;
     border-color: white;
-    width: 10%;
+    width: 35px;
     height: 25px;
 }
 input:hover{
@@ -82,6 +82,14 @@ label{
     font-size: 150%;
     margin-left: 15%;
 }
-table{
-    margin-left: 50%;
+.table{
+    float: right;
+    display: flex;
+    justify-content: flex-end;
+    text-align: center;
+    background-color: #207868;
+    border-radius: 10px;
+    color: #B7DB97;
+    border: double;
+    margin-right: 20%;
 }

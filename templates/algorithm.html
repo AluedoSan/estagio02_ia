@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="/static/algo.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <title>ALGORITMO</title>
 </head>
 <body>
@@ -17,7 +18,19 @@
         <a href="/{user_name}/algorithm/historico">HISTÓRICO</a>
         <a href="*">CONTA</a>
     </div>
-
+    <div class="table">
+        <table>
+            <tr>
+                <th>CULTURA:</th>
+                <td>{{ result }}</td>
+        
+            </tr>
+            <tr>
+                <th>PRECISÃO:</th>
+                <td>{{ accuracy_porcent }}</td>
+            </tr>
+        </table>
+    </div>
     <div class="content">
         <form method="POST" action="/calc" id="myForm">
           <div class="faz">
@@ -51,28 +64,7 @@
           <input class="botton" disabled value="CONFIRMAR" id="calcButton" type="submit">
         </form>
     </div>
-    <table>
-        <tr>
-            <th>PH</th>
-            <th>Fósforo</th>
-            <th>Potássio</th>
-            <th>Chuva</th>
-            <th>Nitrogênio</th>
-            <th>Temperatura</th>
-            <th>Umidade</th>
-            <td>CULTURA</td>
-        </tr>
-        <tr>
-            <td>{{ PH }}</td>
-            <td>{{ P }}</td>
-            <td>{{ K }}</td>
-            <td>{{ rainfall }}</td>
-            <td>{{ N }}</td>
-            <td>{{ temp }}</td>
-            <td>{{ water }}</td>
-            <td>{{ result }}</td>
-        </tr>
-    </table>
+   
     <script>
         function checkFields() {
             var PH = document.getElementById('PH').value;
