@@ -1,0 +1,48 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+.icon{
+    display: flex;
+    justify-content: center;
+    font-size: 500%;
+}
+
+.sidebar {
+    width: 200px;
+    height: 100%;
+    background-color: #207868;
+    color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding-top: 20px;
+}
+
+.sidebar a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    display: block;
+}
+
+.sidebar a:hover {
+    background-color: #555;
+}
+
+
+.content {
+    margin-left: 37%;
+    padding: 20px;
+    width: 500px;
+    height: 350px;
+    background-color: #B7DB97;
+    margin-top: 10%;
+    border: 1px solid #207868;
+    white-space-collapse: preserve;
+}
+.login{
+    display:flex;
+    justify-content:center;
+}
