@@ -15,13 +15,13 @@
   <nav class="column">
     <i class='bx bxs-leaf' style='color:#0d8a0a'></i>
     <br>
-    <div class="links"><a href="/templates/algorithm.html">HISTÓRICO</a></div>
+    <div class="links"><a href="{{ url_for('historic')}}">HISTÓRICO</a></div>
     <div class="links"><a href="*">CONTA</a></div>
     <hr>
     <p>ALGORITIMO</p>
   </nav>
   <div class="column">
-    <form method="POST" action="algorithm/calc">
+    <form method="POST" action="/calc">
       <div class="form_style">
         <label for="PH"><abbr title="Potencial hidrogênico">PH</abbr></label>
         <input type="number" id="PH" name="PH" autofocus>

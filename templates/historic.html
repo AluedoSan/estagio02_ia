@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/static/historic.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='historic.css') }}">
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <title>Histórico</title>
 </head>
@@ -12,7 +12,7 @@
     <nav class="column">
       <i class='bx bxs-leaf' style='color:#0d8a0a'></i>
       <br>
-      <div class="links"><a href="/templates/algorithm.html">ALGORITIMO</a></div>
+      <div class="links"><a href="{{ url_for('algorithm_screen')}}">ALGORITIMO</a></div>
       <div class="links"><a href="*">CONTA</a></div>
       <hr>
       <p>HISTÓRICO</p>
@@ -20,7 +20,9 @@
  
     <main class="column">
       <table>
+        {% if user %}
         <caption>{{user}}</caption>
+        {% endif %}
         <tr>
           <th>PH</th>
           <th>FÓSFORO</th>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/admin.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
     <title>Administrador</title>
 </head>
 <body>
@@ -14,7 +14,7 @@
         <button class="button" type="button" id="add">+ADICIONAR</button>
         <button class="button" type="button">-REMOVER</button>
 
-            <form action="admin/register" style="display: none;" id="form_add">
+            <form action="/add" style="display: none;" id="form_add">
                 <input type="text" name="email" id="user" placeholder="usuário">
                 <input type="email" name="email" id="email" placeholder="e-mail">
                 <input type="password" name="email" id="password" placeholder="senha">
@@ -30,24 +30,7 @@
                 <th>ADMINISTRADOR</th>
                 <th>CRIADO EM</th>
             </tr>
-            <tr>
-                <td>ALEXANDER</td>
-                <td>alex@hotmail.com</td>
-                <td>ALEXANDER</td>
-                <td>1/10/2023</td>
-            </tr>
-            <tr>
-                <td>ERON</td>
-                <td>eron@hotmail.com</td>
-                <td>ALEXANDER</td>
-                <td>2/10/2023</td>
-            </tr>
-            <tr>
-                <td>SÉRGIO</td>
-                <td>sergio@hotmail.com</td>
-                <td>ALEXANDER</td>
-                <td>2/10/2023</td>
-            </tr>
+            
         </table>
     </main>
     <script>
