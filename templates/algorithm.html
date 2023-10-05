@@ -1,82 +1,117 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt_br">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="/static/algo.css">
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <title>ALGORITMO</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Algoritimo</title>
+  <link href="{{ url_for('static', filename='algorithm.css') }}" rel="stylesheet" type="text/css"/>
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
 </head>
+
 <body>
-    <div class="sidebar">
-      <div class="icon">
-        <i class='bx bxs-leaf' style='color:#0ee422'  ></i>
+  <div class="container">
+  <nav class="column">
+    <i class='bx bxs-leaf' style='color:#0d8a0a'></i>
+    <br>
+    <div class="links"><a href="/templates/algorithm.html">HISTÓRICO</a></div>
+    <div class="links"><a href="*">CONTA</a></div>
+    <hr>
+    <p>ALGORITIMO</p>
+  </nav>
+  <div class="column">
+    <form method="POST" action="algorithm/calc">
+      <div class="form_style">
+        <label for="PH"><abbr title="Potencial hidrogênico">PH</abbr></label>
+        <input type="number" id="PH" name="PH" autofocus>
       </div>
-        <h1 id="tittle_algorithm">ALGORITMO</h1>
-        <hr>
-        <a href="/{user_name}/algorithm/historico">HISTÓRICO</a>
-        <a href="*">CONTA</a>
-    </div>
+      <div class="form_style">
+        <label for="fosforo"><abbr title="Fósforo">P</abbr></label>
+        <input type="number" id="fosforo" name="fosforo">
+      </div>
+      <div class="form_style">
+        <label for="potassio"><abbr title="Potássio">K</abbr></label>
+        <input type="number" id="potassio" name="potassio">
+      </div>
+      <div class="form_style">
+        <label for="nitrogenio"><abbr title="Nitrogênio">N</abbr></label>
+        <input type="number" id="nitrogenio" name="nitrogenio">
+      </div>
+      <div class="form_style">
+        <label for="rainfall"><abbr title="Chuva"><i class='bx bxs-cloud-rain' style='color:#6c5cea'></i></abbr></label>
+        <input type="number" id="rainfall" name="rainfall">
+      </div>
+      <div class="form_style">
+        <label for="temp"><abbr title="Temperatura"><i class='bx bxs-thermometer' style='color:#d22b2b; font-size: 26px;'></i></abbr></label>
+        <input type="number" id="temp" name="temp">
+      </div>
+      <div class="form_style">
+        <label for="water"><abbr title="Umidade"><i class='bx bxs-droplet' style='color:#3d67dc'></i></abbr></label>
+        <input type="number" id="water" name="water">
+      </div>
+      <input class="button" disabled value="CONFIRMAR" id="calcButton" type="submit">
+    </form>
+  </div>
+  <div class="column">
+    {% if result %}
     <div class="table">
         <table>
             <tr>
                 <th>CULTURA:</th>
                 <td>{{ result }}</td>
-        
             </tr>
             <tr>
-                <th>PRECISÃO:</th>
-                <td>{{ accuracy_porcent }}</td>
+                <th>CONFIABILIDADE:</th>
+                <td>{{ porcent }}%</td>
+            </tr>
+            <tr>
+              <th>PH:</th>
+              <td>{{PH}}</td>
+            </tr>
+            <tr>
+              <th>Potassio:</th>
+              <td>{{potassio}}</td>
+            </tr>
+            <tr>
+              <th>Fosforo:</th>
+              <td>{{fosforo}}</td>
+            </tr>
+            <tr>
+              <th>Nitrogênio:</th>
+              <td>{{nitrogenio}}</td>
+            </tr>
+            <tr>
+              <th><i class='bx bxs-cloud-rain' style='color:#6c5cea'></i></th>
+              <td>{{rainfall}}</td>
+            </tr>
+            <tr>
+              <th><i class='bx bxs-droplet' style='color:#3d67dc'></i></th>
+              <td>{{water}}</td>
+            </tr>
+            <tr>
+              <th><i class='bx bxs-thermometer' style='color:#d22b2b; font-size: 26px;'></i></th>
+              <td>{{temp}}</td>
             </tr>
         </table>
     </div>
-    <div class="content">
-        <form method="POST" action="/calc" id="myForm">
-          <div class="faz">
-              <label for="PH"><abbr title="Potencial hidrogênico">PH</abbr></label>
-              <input type="number" id="PH" name="PH">
-          </div>
-          <div class="faz">
-              <label for="P"><abbr title="Fósforo">P</abbr></label>
-              <input type="number" id="P" name="P">
-          </div>
-          <div class="faz">
-              <label for="K"><abbr title="Potássio">K</abbr></label>
-              <input type="number" id="K" name="K">
-          </div>
-          <div class="faz">
-              <label for="rainfall"><abbr title="Chuva"><i class='bx bxs-cloud-rain' style='color:#6c5cea'  ></i></abbr></label>
-              <input type="number" id="rainfall" name="rainfall">
-          </div>
-          <div class="faz">
-              <label for="N"><abbr title="Nitrogênio">N</abbr></label>
-              <input type="number" id="N" name="N">
-          </div>
-          <div class="faz">
-              <label for="temp"><abbr title="Temperatura"><i class='bx bxs-thermometer' style='color:#d22b2b; font-size: 26px;'></i></abbr></label>
-              <input type="number" id="temp" name="temp">
-          </div>
-          <div class="faz">
-              <label for="water"><abbr title="Umidade"><i class='bx bxs-droplet' style='color:#3d67dc'></i></abbr></label>
-              <input type="number" id="water" name="water">
-          </div>
-          <input class="botton" disabled value="CONFIRMAR" id="calcButton" type="submit">
-        </form>
-    </div>
-   
-    <script>
+    <div class="iframe_class"><iframe id="iframe_id" src="{{graph_path}}" frameborder="0"></iframe></div>
+    {% endif %}
+  </div>
+
+</div>
+ <script>
         function checkFields() {
             var PH = document.getElementById('PH').value;
-            var P = document.getElementById('P').value;
-            var K = document.getElementById('K').value;
+            var fosforo = document.getElementById('fosforo').value;
+            var potassio = document.getElementById('potassio').value;
             var rainfall = document.getElementById('rainfall').value;
-            var N = document.getElementById('N').value;
+            var nitrogenio = document.getElementById('nitrogenio').value;
             var temp = document.getElementById('temp').value;
             var water = document.getElementById('water').value;
             var calcButton = document.getElementById('calcButton');
             
-            if (PH && P && K && rainfall && N && temp && water) {
+            if (PH && fosforo && potassio && rainfall && nitrogenio && temp && water) {
                 calcButton.disabled = false;
             } else {
                 calcButton.disabled = true;
@@ -89,4 +124,6 @@
         });
     </script>
 </body>
+
+
 </html>
