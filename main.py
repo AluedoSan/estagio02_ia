@@ -42,24 +42,28 @@ def index():
 #! ROTA DE ADMIN
 @app.route('/admin')
 def register():
-    return render_template('admin.html', user='', email='', password='')
+    if request.method == 'POST':
+         #*Pegando os dados e atribuindo a uma variável
+        users=request.form.get('users')
+        passwords=request.form.get('passwords')
+        emails=request.form.get('emails')
+        
+        users=str(users)
+        passwords=str(passwords)
+        emails=str(emails)
+        
+        #*Banco de dados
+        Session = sessionmaker(bind=engine)
+        session = Session()
+        new_user = Usuario_BD(name=users, password=passwords, email=emails)
+        session.add(new_user)
+        session.commit()
+        session.close()
+        return render_template('admin.html', users=users, emails=emails, passwords=passwords)
+    else:
+        return render_template('admin.html', users='', emails='', passwords='')
 
-#! ROTA PARA ADICIONAR USUÁRIO
-@app.route('/add', methods=['POST'])
-def add():
-    #*Pegando os dados e atribuindo a uma variável
-    users=request.form.get('user')
-    passwords=request.form.get('password')
-    emails=request.form.get('email')
-    
-    #*Banco de dados
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    new_user = Usuario_BD(name=users, password=passwords, email=emails)
-    session.add(new_user)
-    session.commit()
-    session.close()
-    return render_template('admin.html')
+
 
 #! ROTA DE HISTÓRICO
 @app.route('/historic')
@@ -104,7 +108,6 @@ def algorithm_calc():
     instance_algorithm = alg(PH, fosforo, potassio, nitrogenio, rainfall, temp, water)
     result, porcent = instance_algorithm.calc()
 
-    graphic1, graphic2 = instance_algorithm.graphic()
 
     #*Guardando informações
     Session = sessionmaker(bind=engine)
@@ -115,10 +118,11 @@ def algorithm_calc():
     session.commit()
     # Fechar a sessão
     session.close()
+    
 
     return render_template("algorithm.html",result = result, porcent = porcent, PH=PH, potassio = potassio, 
                            fosforo = fosforo, rainfall = rainfall, nitrogenio = nitrogenio, temp = temp,
-                           water = water, graphic1 = graphic1, graph_path='/static/grafico_confusao.html')
+                           water = water)
 
 
 if __name__ == '__main__':

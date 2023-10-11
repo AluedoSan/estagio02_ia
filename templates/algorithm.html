@@ -11,7 +11,7 @@
 </head>
 
 <body>
-  <div class="container">
+<div class="container">
   <nav class="column">
     <i class='bx bxs-leaf' style='color:#0d8a0a'></i>
     <br>
@@ -23,19 +23,19 @@
   <div class="column">
     <form method="POST" action="/calc">
       <div class="form_style">
-        <label for="PH"><abbr title="Potencial hidrogênico">PH</abbr></label>
+        <label for="PH"><abbr title="Potencial hidrogênico"><b>PH</b></abbr></label>
         <input type="number" id="PH" name="PH" autofocus>
       </div>
       <div class="form_style">
-        <label for="fosforo"><abbr title="Fósforo">P</abbr></label>
+        <label for="fosforo"><abbr title="Fósforo"><b>P</b></abbr></label>
         <input type="number" id="fosforo" name="fosforo">
       </div>
       <div class="form_style">
-        <label for="potassio"><abbr title="Potássio">K</abbr></label>
+        <label for="potassio"><abbr title="Potássio"><b>K</b></abbr></label>
         <input type="number" id="potassio" name="potassio">
       </div>
       <div class="form_style">
-        <label for="nitrogenio"><abbr title="Nitrogênio">N</abbr></label>
+        <label for="nitrogenio"><abbr title="Nitrogênio"><b>N</b></abbr></label>
         <input type="number" id="nitrogenio" name="nitrogenio">
       </div>
       <div class="form_style">
@@ -55,16 +55,20 @@
   </div>
   <div class="column">
     {% if result %}
+    <div class="results">
+      <table>
+        <tr>
+          <th>CULTURA:</th>
+          <td>{{ result }}</td>
+      </tr>
+      <tr>
+          <th>CONFIABILIDADE:</th>
+          <td>{{ porcent }}%</td>
+      </tr>
+      </table>
+    </div>
     <div class="table">
         <table>
-            <tr>
-                <th>CULTURA:</th>
-                <td>{{ result }}</td>
-            </tr>
-            <tr>
-                <th>CONFIABILIDADE:</th>
-                <td>{{ porcent }}%</td>
-            </tr>
             <tr>
               <th>PH:</th>
               <td>{{PH}}</td>
@@ -95,11 +99,9 @@
             </tr>
         </table>
     </div>
-    <div class="iframe_class"><iframe id="iframe_id" src="{{graph_path}}" frameborder="0"></iframe></div>
     {% endif %}
   </div>
 
-</div>
  <script>
         function checkFields() {
             var PH = document.getElementById('PH').value;

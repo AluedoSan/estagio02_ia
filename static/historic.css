@@ -9,7 +9,7 @@ body{
     min-height: 97vh;
 }
 .column {
-    background-color: #207868;
+    background-color: #2ba18c;
     padding: 2px;
     border: 1px solid #ccc;
 }
@@ -33,7 +33,7 @@ body{
 .links{
     display: flex;
     justify-content: center;
-    padding: 5vh;
+    padding: 2vh 5vh 1vh 5vh;
 }
   
 hr{

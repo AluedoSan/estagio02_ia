@@ -18,12 +18,12 @@ class Algorithm:
 
     def calc(self):
         #! carregamento do dataset
-        cropdf = pd.read_csv("dataset\Crop_recommendation.csv")
-        cropdf.head()
+        self.cropdf = pd.read_csv("dataset\Crop_recommendation.csv")
+        self.cropdf.head()
 
         #* limpar a coluna label do dataset
-        X = cropdf.drop('label', axis=1)
-        y = cropdf['label']
+        X = self.cropdf.drop('label', axis=1)
+        y = self.cropdf['label']
         X_train, X_test, y_train, self.y_test = train_test_split(X, y, test_size=0.3,
                                                         shuffle=True, random_state=0)
         self.model = KNeighborsClassifier()
@@ -41,6 +41,23 @@ class Algorithm:
         number_formated = "{:.2f}".format(accuracy_porcent)
 
         return result[0], number_formated
+    
+    def estatisc(self):
+        # Filtrar o DataFrame para obter apenas as linhas onde 'label' é igual a 'mango'
+        mango_df = self.cropdf[self.cropdf['label'] == 'mango']
+
+        # Calcular média e desvio padrão para as variáveis numéricas no DataFrame filtrado
+        mean_values_mango = mango_df.mean()
+        std_dev_values_mango = mango_df.std()
+
+        # Exibir média e desvio padrão para as variáveis das linhas de manga
+        print("Média das variáveis para as linhas de manga:")
+        print(mean_values_mango)
+        print("\nDesvio padrão das variáveis para as linhas de manga:")
+        print(std_dev_values_mango)
+
+
+                
 
 
     def graphic(self):
