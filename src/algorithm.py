@@ -1,10 +1,8 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
-import plotly.figure_factory as ff
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
+from sklearn.metrics import accuracy_score
+
 
 class Algorithm:
     def __init__(self, ph, fosforo, potassio, water, rainfall, nitrogen, temp):
@@ -18,12 +16,12 @@ class Algorithm:
 
     def calc(self):
         #! carregamento do dataset
-        self.cropdf = pd.read_csv("dataset\Crop_recommendation.csv")
-        self.cropdf.head()
+        cropdf = pd.read_csv("dataset\Crop_recommendation.csv")
+        cropdf.head()
 
         #* limpar a coluna label do dataset
-        X = self.cropdf.drop('label', axis=1)
-        y = self.cropdf['label']
+        X = cropdf.drop('label', axis=1)
+        y = cropdf['label']
         X_train, X_test, y_train, self.y_test = train_test_split(X, y, test_size=0.3,
                                                         shuffle=True, random_state=0)
         self.model = KNeighborsClassifier()
@@ -39,106 +37,33 @@ class Algorithm:
         #* transformar em porcentagem
         accuracy_porcent = accuracy * 100
         number_formated = "{:.2f}".format(accuracy_porcent)
+        
 
         return result[0], number_formated
     
-    def estatisc(self):
-        # Filtrar o DataFrame para obter apenas as linhas onde 'label' é igual a 'mango'
-        mango_df = self.cropdf[self.cropdf['label'] == 'mango']
-
-        # Calcular média e desvio padrão para as variáveis numéricas no DataFrame filtrado
-        mean_values_mango = mango_df.mean()
-        std_dev_values_mango = mango_df.std()
-
-        # Exibir média e desvio padrão para as variáveis das linhas de manga
-        print("Média das variáveis para as linhas de manga:")
-        print(mean_values_mango)
-        print("\nDesvio padrão das variáveis para as linhas de manga:")
-        print(std_dev_values_mango)
-
-
-                
-
-
-    def graphic(self):
-        confusion = confusion_matrix(self.y_test, self.y_pred)
-        classification_rep = classification_report(self.y_test, self.y_pred)
+    def estatistic_culture(self, value):
+        cropdf = pd.read_csv("dataset\Crop_recommendation.csv")
+        cropdf.head()
+        # Filtrar o DataFrame para obter apenas as linhas onde 'label' é igual ao valor
+        result_df = cropdf.loc[cropdf['label'] == value]
+        X = result_df.drop('label', axis=1)
+        # Calcular a média e o desvio padrão para as colunas numéricas
+        mean_values = X.mean()
+        std_dev_values = X.std()
+        mean_temperature = mean_values['temperature']
+        std_temperature = std_dev_values['temperature']
+        mean_humidity = mean_values['humidity']
+        std_humidity = std_dev_values['humidity']
+        mean_PH = mean_values['ph']
+        std_dev_PH= std_dev_values['ph']
+        mean_rainfall = mean_values['rainfall']
+        std_dev_rainfall = std_dev_values['rainfall']
+        mean_nitrogen = mean_values['N']
+        std_dev_nitrogen = std_dev_values['N']
+        mean_fosforo = mean_values['P']
+        std_dev_fosforo = std_dev_values['P']
+        mean_potassio = mean_values['K']
+        std_dev_potassio = std_dev_values['K']
         
-        #* Criar uma figura interativa para a matriz de confusão
-        fig_1 = ff.create_annotated_heatmap(confusion, x=list(self.model.classes_), 
-                                            y=list(self.model.classes_), colorscale='Blues')
-        fig_1.update_layout(
-        title='Matriz de Confusão',
-        xaxis=dict(title='Predicted'),
-        yaxis=dict(title='Actual')
-        )
-
-
-        classification_rep = classification_report(self.y_test, self.y_pred, output_dict=True)
-    
-        # Extrair métricas do relatório de classificação
-        # Remove as linhas "accuracy", "macro avg" e "weighted avg"
-        class_names = list(classification_rep.keys())[:-3]  
-        
-        #* Criar listas para armazenar os valores de métricas
-        precision = []
-        recall = []
-        f1_score = []
-
-        for class_name in class_names:
-            precision.append(classification_rep[class_name]['precision'])
-            recall.append(classification_rep[class_name]['recall'])
-            f1_score.append(classification_rep[class_name]['f1-score'])
-
-        #* Criar gráficos de barras interativos para as métricas do relatório de classificação
-        fig = go.Figure()
-
-        #* Criar gráficos de barras interativos para as métricas do relatório de classificação
-        fig = go.Figure()
-
-        fig.add_trace(go.Bar(
-            x=class_names,
-            y=precision,
-            name='Precisão'
-        ))
-
-        fig.add_trace(go.Bar(
-            x=class_names,
-            y=recall,
-            name='Revocação'
-        ))
-
-        fig.add_trace(go.Bar(
-            x=class_names,
-            y=f1_score,
-            name='Pontuação F1'
-        ))
-
-        fig.update_layout(
-            title='Métricas do Relatório de Classificação por Classe',
-            xaxis=dict(title='Classes'),
-            yaxis=dict(title='Valor'),
-            barmode='group'
-        )
-    
-        #* Criado uma figura Plotly
-        fig = make_subplots(rows=2, cols=1)
-
-        #* Adicionado um gráfico de barras
-        fig.add_trace(go.Bar(
-            x=['A', 'B', 'C'],
-            y=[10, 20, 15],
-            name='Gráfico de Barras'
-        ))
-
-        #* Adicionado um gráfico de dispersão
-        fig.add_trace(go.Scatter(
-            x=[1, 2, 3],
-            y=[30, 15, 25],
-            name='Gráfico de Dispersão'
-        ))
-
-        #* Salvar a figura em um arquivo HTML
-        fig_1.write_html("grafico_confusao.html")
-
-        return fig, fig_1
+        # Retornar as médias e desvios padrão como um dicionário
+        return mean_temperature, std_temperature, mean_humidity, std_humidity, mean_PH, std_dev_PH, mean_rainfall, std_dev_rainfall, mean_nitrogen, std_dev_nitrogen, mean_fosforo, std_dev_fosforo, mean_potassio, std_dev_potassio

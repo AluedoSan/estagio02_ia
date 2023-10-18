@@ -99,6 +99,43 @@
             </tr>
         </table>
     </div>
+    <div class="table_estatic">
+    <table border="1">
+      <tr>
+        <th>Rótulo</th>
+        <td>PH</td>
+        <td>Potássio</td>
+        <td>Fósforo</td>
+        <td>Nitrogênio</td>
+        <td>Chuva</td>
+        <td>Umidade</td>
+        <td>Temperatura</td>
+      </tr>
+      <tr>
+        <th>Média</th>
+        <td>{{mean_PH}}</td>
+        <td>{{mean_potassio}}</td>
+        <td>{{mean_fosforo}}</td>
+        <td>{{mean_nitrogen}}</td>
+        <td>{{mean_rainfall}}</td>
+        <td>{{mean_humidity}}</td>
+        <td>{{mean_temperature}}</td>
+      </tr>
+      <tr>
+        <th>Desvio padrão</th>
+        <td>{{std_dev_PH}}</td>
+        <td>{{std_dev_potassio}}</td>
+        <td>{{std_dev_fosforo}}</td>
+        <td>{{std_dev_nitrogen}}</td>
+        <td>{{std_dev_rainfall}}</td>
+        <td>{{std_dev_humidity}}</td>
+        <td>{{std_dev_temperature}}</td>
+      </tr>
+    </table>
+  </div>
+  <div class="image">
+    <img src="{{ url_for('static', filename='graphic.png') }}" alt="Gráfico">
+  </div>
     {% endif %}
   </div>
 

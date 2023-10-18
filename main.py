@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request, url_for
+import os
+import matplotlib.pyplot as plt
 from src.algorithm import Algorithm as alg
 from sqlalchemy import create_engine, Column, Integer, String, delete
 from sqlalchemy.ext.declarative import declarative_base
@@ -43,7 +45,7 @@ def index():
 @app.route('/admin')
 def register():
     if request.method == 'POST':
-         #*Pegando os dados e atribuindo a uma variável
+        #*Pegando os dados e atribuindo a uma variável
         users=request.form.get('users')
         passwords=request.form.get('passwords')
         emails=request.form.get('emails')
@@ -107,22 +109,73 @@ def algorithm_calc():
     #! Instância da minha classe
     instance_algorithm = alg(PH, fosforo, potassio, nitrogenio, rainfall, temp, water)
     result, porcent = instance_algorithm.calc()
-
-
+    print(result)
+    
     #*Guardando informações
     Session = sessionmaker(bind=engine)
     session = Session()
     new_exec = Algoritimo_BD(ph=PH, p=fosforo, k=potassio, n=nitrogenio, chuva=rainfall, temper=temp,
-                          umid=water, resultado=result)
+                            umid=water, resultado=result)
     session.add(new_exec)
     session.commit()
     # Fechar a sessão
     session.close()
-    
+    #estatisticas = instance_algorithm.estatistic_culture(result)
+    mean_temperature, std_dev_temperature, mean_humidity, std_dev_humidity, mean_PH, std_dev_PH, mean_rainfall, std_dev_rainfall, mean_nitrogen, std_dev_nitrogen, mean_fosforo, std_dev_fosforo, mean_potassio, std_dev_potassio = instance_algorithm.estatistic_culture(result)
+    #Deixando os números com 2 casas decimais
+    mean_temperature = round(mean_temperature, 2)
+    mean_humidity = round(mean_humidity, 2)
+    mean_fosforo = round(mean_fosforo, 2)
+    mean_nitrogen = round(mean_nitrogen, 2)
+    mean_PH = round(mean_PH, 2)
+    mean_potassio = round(mean_potassio, 2)
+    mean_rainfall = round(mean_rainfall, 2)
 
+    std_dev_temperature = round(std_dev_temperature, 2)
+    std_dev_fosforo = round(std_dev_fosforo, 2)
+    std_dev_humidity = round(std_dev_humidity, 2)
+    std_dev_PH = round(std_dev_PH, 2)
+    std_dev_rainfall = round(std_dev_rainfall, 2)
+    std_dev_nitrogen = round(std_dev_nitrogen, 2)
+    std_dev_potassio = round(std_dev_potassio, 2)
+    
+    #Criando listas para gráfico
+    list_avarage = [PH, potassio, fosforo, nitrogenio, rainfall, water, temp]
+    list_results = [mean_PH, mean_potassio, mean_fosforo, mean_nitrogen, mean_rainfall, mean_humidity, mean_temperature]
+    x = [0, 40, 80, 120, 160, 240, 280]
+    #Gráficos
+    plt.plot(x, list_results, label='Dados obtidos', marker='o')
+    plt.plot(x, list_avarage, label='Dados ideais', marker='s')
+    
+    #Legenda
+    plt.xlabel('Eixo X')
+    plt.ylabel('Eixo Y')
+    plt.title('Comparação entre os dados')
+    plt.legend()
+
+    file_path = ('C:\\Users\\alexa\\Estagio02_flask\\static\\graphic.png')
+    
+    if os.path.exists(file_path):
+        os.remove(file_path)
+    plt.savefig('C:\\Users\\alexa\\Estagio02_flask\\static\\graphic.png')
+    plt.close()
+      
     return render_template("algorithm.html",result = result, porcent = porcent, PH=PH, potassio = potassio, 
                            fosforo = fosforo, rainfall = rainfall, nitrogenio = nitrogenio, temp = temp,
-                           water = water)
+                           water = water, mean_temperature=mean_temperature,
+                           std_dev_temperature=std_dev_temperature,
+                           mean_humidity=mean_humidity,
+                           std_dev_humidity=std_dev_humidity,
+                           mean_PH=mean_PH,
+                           std_dev_PH=std_dev_PH,
+                           mean_rainfall=mean_rainfall,
+                           std_dev_rainfall=std_dev_rainfall,
+                           mean_nitrogen=mean_nitrogen,
+                           std_dev_nitrogen=std_dev_nitrogen,
+                           mean_fosforo=mean_fosforo,
+                           std_dev_fosforo=std_dev_fosforo,
+                           mean_potassio=mean_potassio,
+                           std_dev_potassio=std_dev_potassio)
 
 
 if __name__ == '__main__':
