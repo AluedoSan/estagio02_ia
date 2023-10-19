@@ -152,9 +152,8 @@ def algorithm_calc():
     plt.ylabel('Eixo Y')
     plt.title('Comparação entre os dados')
     plt.legend()
-
+    plt.gcf().set_facecolor('None')
     file_path = ('C:\\Users\\alexa\\Estagio02_flask\\static\\graphic.png')
-    
     if os.path.exists(file_path):
         os.remove(file_path)
     plt.savefig('C:\\Users\\alexa\\Estagio02_flask\\static\\graphic.png')

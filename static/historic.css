@@ -9,7 +9,8 @@ body{
     min-height: 97vh;
 }
 .column {
-    background-color: #2ba18c;
+    background: rgb(35,136,67);
+    background: radial-gradient(circle, rgba(35,136,67,1) 0%, rgba(32,120,104,1) 100%);
     padding: 2px;
     border: 1px solid #ccc;
 }

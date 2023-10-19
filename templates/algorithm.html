@@ -13,7 +13,7 @@
 <body>
 <div class="container">
   <nav class="column">
-    <i class='bx bxs-leaf' style='color:#0d8a0a'></i>
+    <i class='bx bxs-leaf' style='color:#04ff00d0'></i>
     <br>
     <div class="links"><a href="{{ url_for('historic')}}">HISTÓRICO</a></div>
     <div class="links"><a href="*">CONTA</a></div>
@@ -24,31 +24,31 @@
     <form method="POST" action="/calc">
       <div class="form_style">
         <label for="PH"><abbr title="Potencial hidrogênico"><b>PH</b></abbr></label>
-        <input type="number" id="PH" name="PH" autofocus>
+        <input type="number" id="PH" name="PH" autofocus min="0" max="14">
       </div>
       <div class="form_style">
         <label for="fosforo"><abbr title="Fósforo"><b>P</b></abbr></label>
-        <input type="number" id="fosforo" name="fosforo">
+        <input type="number" id="fosforo" name="fosforo" min="0" max="150">
       </div>
       <div class="form_style">
         <label for="potassio"><abbr title="Potássio"><b>K</b></abbr></label>
-        <input type="number" id="potassio" name="potassio">
+        <input type="number" id="potassio" name="potassio" min="0" max="220">
       </div>
       <div class="form_style">
         <label for="nitrogenio"><abbr title="Nitrogênio"><b>N</b></abbr></label>
-        <input type="number" id="nitrogenio" name="nitrogenio">
+        <input type="number" id="nitrogenio" name="nitrogenio" min="0" max="200">
       </div>
       <div class="form_style">
         <label for="rainfall"><abbr title="Chuva"><i class='bx bxs-cloud-rain' style='color:#6c5cea'></i></abbr></label>
-        <input type="number" id="rainfall" name="rainfall">
+        <input type="number" id="rainfall" name="rainfall" min="0" max="300">
       </div>
       <div class="form_style">
         <label for="temp"><abbr title="Temperatura"><i class='bx bxs-thermometer' style='color:#d22b2b; font-size: 26px;'></i></abbr></label>
-        <input type="number" id="temp" name="temp">
+        <input type="number" id="temp" name="temp" min="15" max="35">
       </div>
       <div class="form_style">
         <label for="water"><abbr title="Umidade"><i class='bx bxs-droplet' style='color:#3d67dc'></i></abbr></label>
-        <input type="number" id="water" name="water">
+        <input type="number" id="water" name="water" min="25" max="100">
       </div>
       <input class="button" disabled value="CONFIRMAR" id="calcButton" type="submit">
     </form>
@@ -59,7 +59,7 @@
       <table>
         <tr>
           <th>CULTURA:</th>
-          <td>{{ result }}</td>
+          <td style="font-size: 3vh;">{{ result }}</td>
       </tr>
       <tr>
           <th>CONFIABILIDADE:</th>
@@ -90,12 +90,12 @@
               <td>{{rainfall}}</td>
             </tr>
             <tr>
-              <th><i class='bx bxs-droplet' style='color:#3d67dc'></i></th>
-              <td>{{water}}</td>
-            </tr>
-            <tr>
               <th><i class='bx bxs-thermometer' style='color:#d22b2b; font-size: 26px;'></i></th>
               <td>{{temp}}</td>
+            </tr>
+            <tr>
+              <th><i class='bx bxs-droplet' style='color:#3d67dc'></i></th>
+              <td>{{water}}</td>
             </tr>
         </table>
     </div>
