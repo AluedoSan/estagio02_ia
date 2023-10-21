@@ -44,7 +44,7 @@
       </div>
       <div class="form_style">
         <label for="temp"><abbr title="Temperatura"><i class='bx bxs-thermometer' style='color:#d22b2b; font-size: 26px;'></i></abbr></label>
-        <input type="number" id="temp" name="temp" min="15" max="35">
+        <input type="number" id="temp" name="temp" min="15" max="42">
       </div>
       <div class="form_style">
         <label for="water"><abbr title="Umidade"><i class='bx bxs-droplet' style='color:#3d67dc'></i></abbr></label>
@@ -62,9 +62,13 @@
           <td style="font-size: 3vh;">{{ result }}</td>
       </tr>
       <tr>
-          <th>CONFIABILIDADE:</th>
-          <td>{{ porcent }}%</td>
+          <th>CONFIABILIDADE(Execução):</th>
+          <td>{{ veracid }}%</td>
       </tr>
+      <tr>
+        <th>CONFIABILIDADE(Dataset):</th>
+        <td>{{ porcent }}%</td>
+    </tr>
       </table>
     </div>
     <div class="table">
@@ -134,7 +138,7 @@
     </table>
   </div>
   <div class="image">
-    <img src="{{ url_for('static', filename='graphic.png') }}" alt="Gráfico">
+    {{ graphic | safe }}
   </div>
     {% endif %}
   </div>

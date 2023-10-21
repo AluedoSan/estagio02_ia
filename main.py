@@ -1,10 +1,10 @@
 from flask import Flask, render_template, request, url_for
-import os
-import matplotlib.pyplot as plt
 from src.algorithm import Algorithm as alg
 from sqlalchemy import create_engine, Column, Integer, String, delete
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+import plotly.express as px
+import pandas as pd
 
 #*BANCO DE DADOS
 engine = create_engine('mysql://root:root@localhost/estagio02')
@@ -42,14 +42,14 @@ def index():
     return render_template('index.html')
 
 #! ROTA DE ADMIN
-@app.route('/admin')
+@app.route('/admin', methods=['GET','POST'])
 def register():
-    if request.method == 'POST':
+    if request.method == "POST":
         #*Pegando os dados e atribuindo a uma variável
         users=request.form.get('users')
         passwords=request.form.get('passwords')
         emails=request.form.get('emails')
-        
+
         users=str(users)
         passwords=str(passwords)
         emails=str(emails)
@@ -63,7 +63,7 @@ def register():
         session.close()
         return render_template('admin.html', users=users, emails=emails, passwords=passwords)
     else:
-        return render_template('admin.html', users='', emails='', passwords='')
+        return render_template('admin.html',users='', emails='', passwords='')
 
 
 
@@ -108,8 +108,7 @@ def algorithm_calc():
 
     #! Instância da minha classe
     instance_algorithm = alg(PH, fosforo, potassio, nitrogenio, rainfall, temp, water)
-    result, porcent = instance_algorithm.calc()
-    print(result)
+    result, porcent, veracid = instance_algorithm.calc()
     
     #*Guardando informações
     Session = sessionmaker(bind=engine)
@@ -139,26 +138,41 @@ def algorithm_calc():
     std_dev_nitrogen = round(std_dev_nitrogen, 2)
     std_dev_potassio = round(std_dev_potassio, 2)
     
-    #Criando listas para gráfico
-    list_avarage = [PH, potassio, fosforo, nitrogenio, rainfall, water, temp]
-    list_results = [mean_PH, mean_potassio, mean_fosforo, mean_nitrogen, mean_rainfall, mean_humidity, mean_temperature]
-    x = [0, 40, 80, 120, 160, 240, 280]
-    #Gráficos
-    plt.plot(x, list_results, label='Dados obtidos', marker='o')
-    plt.plot(x, list_avarage, label='Dados ideais', marker='s')
+    # Dados do usuário
+    user_data = {
+    'PH': PH,
+    'fósforo': fosforo,
+    'potassio': potassio,
+    'nitrogenio': nitrogenio,
+    'chuva': rainfall,
+    'temperatura': temp,
+    'umidade': water
+    }
+
+    # Dados médios
+    mean_data = {
+        'PH': mean_PH,
+        'fósforo': mean_fosforo,
+        'potassio': mean_potassio,
+        'nitrogenio': mean_nitrogen,
+        'chuva': mean_rainfall,
+        'temperatura': mean_temperature,
+        'umidade': mean_humidity 
+    }
+
+    # Criar um DataFrame com os dados
+    df = pd.DataFrame({'Variavel': list(user_data.keys()) + list(mean_data.keys()),
+                    'Valor': list(user_data.values()) + list(mean_data.values()),
+                    'Origem': ['Usuário'] * 7 + ['Média'] * 7})
+
+    # Criar o gráfico de barras agrupadas com o Plotly
+    fig = px.bar(df, x='Variavel', y='Valor', color='Origem',
+                title='Comparação de Dados do Usuário e Média', barmode='group')
+
+    fig.update_xaxes(title='Variável')
+    fig.update_yaxes(title='Valor')
     
-    #Legenda
-    plt.xlabel('Eixo X')
-    plt.ylabel('Eixo Y')
-    plt.title('Comparação entre os dados')
-    plt.legend()
-    plt.gcf().set_facecolor('None')
-    file_path = ('C:\\Users\\alexa\\Estagio02_flask\\static\\graphic.png')
-    if os.path.exists(file_path):
-        os.remove(file_path)
-    plt.savefig('C:\\Users\\alexa\\Estagio02_flask\\static\\graphic.png')
-    plt.close()
-      
+
     return render_template("algorithm.html",result = result, porcent = porcent, PH=PH, potassio = potassio, 
                            fosforo = fosforo, rainfall = rainfall, nitrogenio = nitrogenio, temp = temp,
                            water = water, mean_temperature=mean_temperature,
@@ -174,7 +188,9 @@ def algorithm_calc():
                            mean_fosforo=mean_fosforo,
                            std_dev_fosforo=std_dev_fosforo,
                            mean_potassio=mean_potassio,
-                           std_dev_potassio=std_dev_potassio)
+                           std_dev_potassio=std_dev_potassio,
+                           veracid=veracid,
+                           graphic = fig.to_html(full_html=False))
 
 
 if __name__ == '__main__':

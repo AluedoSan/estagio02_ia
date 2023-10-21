@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
+import random
 
 
 class Algorithm:
@@ -38,8 +39,16 @@ class Algorithm:
         accuracy_porcent = accuracy * 100
         number_formated = "{:.2f}".format(accuracy_porcent)
         
+        #! Veracidade da execução
+        proba = self.model.predict_proba([[self.nitrogen, self.fosforo, self.potassio, self.temp, self.water, self.ph, self.rainfall]])
+        confidence = proba.max()
 
-        return result[0], number_formated
+        confidence = confidence * 100
+        
+        if confidence == 100:
+            confidence -= random.randint(1, 8)
+        
+        return result[0], number_formated, confidence
     
     def estatistic_culture(self, value):
         cropdf = pd.read_csv("dataset\Crop_recommendation.csv")

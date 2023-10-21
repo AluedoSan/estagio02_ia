@@ -14,7 +14,7 @@
         <button class="button" type="button" id="add">+ADICIONAR</button>
         <button class="button" type="button">-REMOVER</button>
 
-            <form action="/admin" style="display: none;" id="form_add">
+            <form action="/admin" style="display: none;" id="form_add" method="POST">
                 <input type="text" name="users" id="users" placeholder="usuário">
                 <input type="email" name="emails" id="emails" placeholder="e-mail">
                 <input type="password" name="passwords" id="passwords" placeholder="senha">
@@ -29,6 +29,12 @@
                 <th>E-MAIL</th>
                 <th>ADMINISTRADOR</th>
                 <th>CRIADO EM</th>
+            </tr>
+            <tr>
+                <td>{{users}}</td>
+                <td>{{emails}}</td>
+                <td></td>
+                <td></td>
             </tr>
         </table>
     </main>
