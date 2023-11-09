@@ -6,16 +6,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link rel="icon" type="image/x-icon" href="../static/image/leaf-solid-24.png">
   <title>Login</title>
 </head>
 
 <body>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+        <div class="flash_message">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
   <div class="container">
   <div class="column1">
-  <form action="algorithm">
+  <form method="POST">
     <label for="login">Login</label>
     <p>Entre com seu login e senha!</p>
-    <input type="text" id="login" name="login" placeholder="usuário"><br>
+    <input type="text" id="usuario" name="usuario" placeholder="usuário"><br>
     <input type="text" id="senha" name="senha" placeholder="senha"><br>
     <a href="*">Esqueceu a senha?</a><br>
     <input class="button" type="submit" value="CONFIRMAR">

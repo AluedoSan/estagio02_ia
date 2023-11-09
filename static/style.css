@@ -70,4 +70,6 @@ body{
     color:#666af5;
   }
 
-  
+.flash_message{
+  color: rgba(128, 25, 25, 0.699);
+}

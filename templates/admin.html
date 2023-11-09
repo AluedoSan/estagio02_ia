@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+    <link rel="icon" type="image/x-icon" href="../static/image/leaf-solid-24.png">
     <title>Administrador</title>
 </head>
 <body>
@@ -18,24 +19,33 @@
                 <input type="text" name="users" id="users" placeholder="usuário">
                 <input type="email" name="emails" id="emails" placeholder="e-mail">
                 <input type="password" name="passwords" id="passwords" placeholder="senha">
+                <label for="admin">admin</label>
+                <input type="checkbox" name="admin" id="admin">
                 <button type="submit" class="button">Enviar</button>
             </form>
 
     </div>
     <main>
         <table>
+            <thead>
+                <tr>
+                    <th>NOME</th>
+                    <th>E-MAIL</th>
+                    <th>ADMINISTRADOR</th>
+                    <th>CRIADO EM</th>
+                </tr>
+            </thead>
+            
+            <tbody>
+            {%for users in users%}
             <tr>
-                <th>NOME</th>
-                <th>E-MAIL</th>
-                <th>ADMINISTRADOR</th>
-                <th>CRIADO EM</th>
-            </tr>
-            <tr>
-                <td>{{users}}</td>
-                <td>{{emails}}</td>
+                <td>{{users['usuario']}}</td>
+                <td>{{users['email']}}</td>
                 <td></td>
                 <td></td>
             </tr>
+            {%endfor%}
+        </tbody>
         </table>
     </main>
     <script>

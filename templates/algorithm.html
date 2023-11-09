@@ -7,7 +7,7 @@
   <title>Algoritimo</title>
   <link href="{{ url_for('static', filename='algorithm.css') }}" rel="stylesheet" type="text/css"/>
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-
+  <link rel="icon" type="image/x-icon" href="../static/image/leaf-solid-24.png">
 </head>
 
 <body>
@@ -19,6 +19,9 @@
     <div class="links"><a href="*">CONTA</a></div>
     <hr>
     <p>ALGORITIMO</p>
+    <div class="user_div">
+      <p>usuário {{user_log}}</p>
+    </div>
   </nav>
   <div class="column">
     <form method="POST" action="/calc">
@@ -74,32 +77,13 @@
     <div class="table">
         <table>
             <tr>
-              <th>PH:</th>
-              <td>{{PH}}</td>
-            </tr>
-            <tr>
-              <th>Potassio:</th>
-              <td>{{potassio}}</td>
-            </tr>
-            <tr>
-              <th>Fosforo:</th>
-              <td>{{fosforo}}</td>
-            </tr>
-            <tr>
-              <th>Nitrogênio:</th>
-              <td>{{nitrogenio}}</td>
-            </tr>
-            <tr>
-              <th><i class='bx bxs-cloud-rain' style='color:#6c5cea'></i></th>
-              <td>{{rainfall}}</td>
-            </tr>
-            <tr>
-              <th><i class='bx bxs-thermometer' style='color:#d22b2b; font-size: 26px;'></i></th>
-              <td>{{temp}}</td>
-            </tr>
-            <tr>
-              <th><i class='bx bxs-droplet' style='color:#3d67dc'></i></th>
-              <td>{{water}}</td>
+              <th colspan="2" id="tableUser">PH: {{PH}}</th>
+              <th colspan="2" id="tableUser">Potássio: {{potassio}}</th>
+              <th colspan="2" id="tableUser">Fósforo: {{fosforo}}</th>
+              <th colspan="2" id="tableUser">Nitrogênio: {{nitrogenio}}</th>
+              <th colspan="2" id="tableUser"><i class='bx bxs-cloud-rain' style='color:#6c5cea'></i> {{rainfall}}</th>
+              <th colspan="2" id="tableUser"><i class='bx bxs-thermometer' style='color:#d22b2b; font-size: 26px;'></i> {{temp}}</th>
+              <th colspan="2" id="tableUser"><i class='bx bxs-droplet' style='color:#3d67dc'></i> {{water}}</th>
             </tr>
         </table>
     </div>
