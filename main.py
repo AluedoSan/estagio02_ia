@@ -54,7 +54,7 @@ def load_user(user_id):
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        # Verifique as credenciais do usuário (substitua isso pela lógica real)
+        # Verifica as credenciais do usuário 
         usuario = request.form['usuario']
         senha = request.form['senha']
         Session = sessionmaker(bind=engine)
@@ -77,6 +77,7 @@ def index():
 @app.route('/admin', methods=['GET','POST'])
 @login_required
 def register():
+    #Banco de dados iniciação
     Session = sessionmaker(bind=engine)
     session = Session()
     all_users = session.query(Usuario_BD).all()
@@ -129,6 +130,7 @@ def algorithm_screen():
 @app.route('/calc', methods=['POST'])
 @login_required
 def algorithm_calc():
+    #Pegar o ID e nome do usuário
     user_log = current_user.usuario
     user_id = current_user.id
     
