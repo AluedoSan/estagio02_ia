@@ -17,21 +17,66 @@
       <div class="links"><a href="*">CONTA</a></div>
       <hr>
       <p>HISTÓRICO</p>
+      <div class="user_div">
+        <p>{{user_name}}</p>
+      </div>
     </nav>
  
     <main class="column">
       <table>
-        {% if user %}
-        <caption>{{user}}</caption>
-        {% endif %}
         <tr>
-          <th>PH</th>
-          <th>FÓSFORO</th>
-          <th>POTÁSSIO</th>
-          <th>NITROGÊNIO</th>
-          <th>CHUVA</th>
-          <th>TEMPERATURA</th>
-          <th>UMIDADE</th>
+          <th class="headers">DATA</th>
+          {% for id_of_user in id_of_user %}
+          <td>{{id_of_user['data']}}</td>
+          {% endfor %}
+        </tr>
+        <tr>
+          <th class="headers">PH</th>
+          {% for id_of_user in id_of_user %}
+          <td>{{id_of_user['ph']}}</td>
+          {% endfor %}
+        </tr>
+        <tr>
+          <th class="headers">FÓSFORO</th>
+          {% for id_of_user in id_of_user %}
+          <td>{{id_of_user['p']}}</td>
+          {% endfor %}
+        </tr>
+        <tr>
+          <th class="headers">POTÁSSIO</th>
+          {% for id_of_user in id_of_user %}
+          <td>{{id_of_user['k']}}</td>
+          {% endfor %}
+        </tr>
+        <tr>
+          <th class="headers">NITROGÊNIO</th>
+          {% for id_of_user in id_of_user %}
+          <td>{{id_of_user['n']}}</td>
+          {% endfor %}
+        </tr>
+        <tr>
+          <th class="headers">CHUVA</th>
+          {% for id_of_user in id_of_user %}
+          <td>{{id_of_user['chuva']}}</td>
+          {% endfor %}
+        </tr>
+        <tr>
+          <th class="headers">TEMPERATURA</th>
+          {% for id_of_user in id_of_user %}
+          <td>{{id_of_user['temper']}}</td>
+          {% endfor %}
+        </tr>
+        <tr>
+          <th class="headers">UMIDADE</th>
+          {% for id_of_user in id_of_user %}
+          <td>{{id_of_user['umid']}}</td>
+          {% endfor %}
+        </tr>
+        <tr>
+          <th class="headers">RESULTADO</th>
+          {% for id_of_user in id_of_user %}
+          <td>{{id_of_user['resultado']}}</td>
+          {% endfor %}
         </tr>
       </table>
     </main>

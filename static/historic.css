@@ -1,5 +1,6 @@
 body{
     background-color: #000000;
+    margin: 0.3vh;
 }
 
 .container {
@@ -13,6 +14,8 @@ body{
     background: radial-gradient(circle, rgba(35,136,67,1) 0%, rgba(32,120,104,1) 100%);
     padding: 2px;
     border: 1px solid #ccc;
+    display: flex;
+    flex-direction: column;
 }
   /* ÍCONE */
 .bxs-leaf:before {
@@ -51,12 +54,15 @@ table{
     display: grid;
     justify-items: center;
     font-family: Arial, Helvetica, sans-serif;
+    justify-content: center;
+    margin-top: 20vh;
 }
 
-th{
+th, td{
     border-radius: 5px;
-    background: #4dbf59;
-    padding: 1vh 5.5vh 1vh 5.5vh;
+    background: #bcffc3;
+    padding: 1vh 8vh 1vh 8vh;
+    text-align: center;
 }
 
 caption{
@@ -67,4 +73,14 @@ caption{
     color: white;
     border-radius: 5px;
     margin: 1vh;
+}
+
+.user_div{
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column-reverse;
+}
+
+.headers{
+    padding: 1.5vh;
 }

@@ -42,11 +42,11 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 @login_manager.user_loader
-def load_user(user_id):
+def load_user(id):
     # Carregue o usuário com base no user_id do banco de dados
     Session = sessionmaker(bind=engine)
     session = Session()
-    user = session.query(Usuario_BD).get(user_id)
+    user = session.query(Usuario_BD).get(id)
     session.close()
     return user
 
@@ -111,7 +111,14 @@ def register():
 @app.route('/historic')
 @login_required
 def historic():
-    return render_template('historic.html')
+    user_id = current_user.id
+    user_name = current_user.usuario
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    id_of_user = session.query(Algoritimo_BD).filter_by(user_id=user_id)
+    session.close()
+    return render_template('historic.html', id_of_user = id_of_user, user_name=user_name)
+
 
 #* ROTA DE TESTES
 @app.route('/teste')
