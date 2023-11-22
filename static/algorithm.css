@@ -9,7 +9,6 @@ body{
   min-height: 97vh;
 }
 .column {
-  background: rgb(35,136,67);
   background: radial-gradient(circle, rgba(35,136,67,1) 0%, rgba(32,120,104,1) 100%);
   padding: 2px;
   border: 1px solid #ccc;
@@ -89,6 +88,8 @@ p{
   font-family: Arial, Helvetica, sans-serif;
   font-size: 115%;
   text-align: center;
+  color: white;
+  background: #ffffff2c;
 }
 
 .results{
@@ -147,4 +148,20 @@ td, th{
   display: flex;
   flex-grow: 1;
   flex-direction: column-reverse;
+}
+
+#user{
+  background-color: rgba(255, 255, 255, 0);
+}
+
+caption{
+  padding: 1vh;
+}
+
+.diff{
+  display: flex;
+}
+
+#diff{
+  background-color: #4dbf59;
 }

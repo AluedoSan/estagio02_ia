@@ -1,13 +1,17 @@
 from flask import Flask, render_template, request, url_for, flash, redirect
 from src.algorithm import Algorithm as alg
-from sqlalchemy import create_engine, Column, Integer, String, Boolean,delete, DATE, ForeignKey
+from sqlalchemy import create_engine, Column, Integer, String, Boolean, DATE, ForeignKey, or_
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 import plotly.express as px
 import pandas as pd
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from datetime import date
+from sqlalchemy_pagination import paginate
+from flask_bcrypt import Bcrypt, check_password_hash
+import time
 
+bcrypt = Bcrypt()
 #*BANCO DE DADOS
 engine = create_engine('mysql://root:root@localhost/estagio02')
 Base = declarative_base()
@@ -18,6 +22,7 @@ class Usuario_BD(Base, UserMixin):
     senha = Column(String(25))
     email = Column(String(25))
     admin = Column(Boolean)
+    create_user = Column(DATE)
 
 class Algoritimo_BD(Base):
     __tablename__ = 'algoritimo_bd'
@@ -32,9 +37,8 @@ class Algoritimo_BD(Base):
     resultado = Column(String(15))
     data = Column(DATE)
     user_id = Column(Integer, ForeignKey('user_bd.id'))
-    
     user_relation = relationship('Usuario_BD')
-#Base.metadata.create_all(engine)
+
 #*Definição do app para utilizar o Flask
 app = Flask(__name__)
 app.secret_key = '@lG0r1t1m0-Agr0N0m1@'
@@ -50,6 +54,13 @@ def load_user(id):
     session.close()
     return user
 
+@app.route('/logout', methods=["GET", "POST"])
+@login_required
+def log_out():
+    logout_user()
+    flash("Usuário escolheu sair!")
+    return redirect('/')
+
 #! ROTA DE LOGIN
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -60,14 +71,19 @@ def index():
         Session = sessionmaker(bind=engine)
         session = Session()
         verify_user = session.query(Usuario_BD).filter_by(usuario=usuario).first()
-        session.close()
-        if verify_user and senha == verify_user.senha and verify_user.admin == True:
-            login_user(verify_user)
-            return redirect(url_for('register'))
-        elif verify_user and senha == verify_user.senha:
-            login_user(verify_user)
-            return redirect(url_for('algorithm_screen'))
+        
+        if verify_user and check_password_hash(verify_user.senha, senha):
+            # A senha é válida
+            session.close()
+            if verify_user.admin:
+                login_user(verify_user)
+                return redirect(url_for('register'))
+            else:
+                login_user(verify_user)
+                return redirect(url_for('algorithm_screen'))
         else:
+            # Senha inválida ou usuário não encontrado
+            session.close()
             flash('Credenciais inválidas', 'error')
 
     return render_template('index.html')
@@ -79,33 +95,57 @@ def index():
 def register():
     #Banco de dados iniciação
     Session = sessionmaker(bind=engine)
-    session = Session()
-    all_users = session.query(Usuario_BD).all()
+    user_name = current_user.usuario
+    with Session() as session:
+        all_users = session.query(Usuario_BD).all()
+    
     if request.method == "POST":
         #*Pegando os dados e atribuindo a uma variável
         users=request.form.get('users')
         passwords=request.form.get('passwords')
         emails=request.form.get('emails')
         admin = request.form.get('admin')
-        
-        #*Arrumando o tipo das variáveis
-        users = str(users)
-        admin = bool(admin)
-        passwords=str(passwords)
-        emails=str(emails)
-        
-        #*Banco de dados
-        
-        user_bd = Usuario_BD(email=emails, usuario=users, senha=passwords, admin=admin)
-        session.add(user_bd)
-        session.commit()
-        session.close()
-        return render_template('admin.html', users=users, emails=emails)
+        hashed_password = bcrypt.generate_password_hash(passwords).decode('utf-8')
+        if session.query(Usuario_BD).filter(or_(Usuario_BD.usuario == users, Usuario_BD.email == emails)).first() is None:
+        # Se não existirem, adicione ao banco de dados
+            users = str(users)
+            admin = bool(admin)
+            passwords = str(passwords)
+            emails = str(emails)
+            data = date.today()
+            
+            user_bd = Usuario_BD(email=emails, usuario=users, senha=hashed_password, admin=admin, create_user=data)
+            session.add(user_bd)
+            session.commit()
+            session.close()
+            flash("Usuário adicionado com sucesso!", "success")
+            time.sleep(1)
+            return redirect(url_for('register'))
+        else:
+            session.close()
+            flash("Usuário ou E-mail já existentes!", "error")
     else:
         session.close()
-        return render_template('admin.html',users=all_users)
+    return render_template('admin.html', users=all_users, user_name=user_name)
 
 
+@app.route('/delete', methods=['POST'])
+@login_required
+def delete():
+    Session = sessionmaker(bind=engine)
+    user_id = request.form.get('user_id')
+
+    with Session() as session:
+        user_to_delete = session.query(Usuario_BD).filter_by(id=user_id).first()
+        if user_to_delete:
+            session.delete(user_to_delete)
+            session.commit()
+            flash("Usuário removido com sucesso!", "success")
+        else:
+            flash("Usuário não encontrado.", "error")
+
+    return redirect(url_for('register'))
+    
 
 #! ROTA DE HISTÓRICO
 @app.route('/historic')
@@ -113,17 +153,26 @@ def register():
 def historic():
     user_id = current_user.id
     user_name = current_user.usuario
+
+    # Página atual (padrão: 1)
+    page = request.args.get('page', 1, type=int)
+    
+    # Itens por página (padrão: 5)
+    per_page = 5
+
     Session = sessionmaker(bind=engine)
     session = Session()
-    id_of_user = session.query(Algoritimo_BD).filter_by(user_id=user_id)
-    session.close()
-    return render_template('historic.html', id_of_user = id_of_user, user_name=user_name)
+    
+    # Consulta sem a chamada direta de paginate no objeto Query
+    query = session.query(Algoritimo_BD).filter_by(user_id=user_id)
+
+    # Utilizando a função paginate
+    paginated_query = paginate(query, page, per_page)
 
 
-#* ROTA DE TESTES
-@app.route('/teste')
-def teste():
-    return render_template('teste.html')
+    return render_template('historic.html', paginated_query=paginated_query, user_name=user_name)
+
+
 
 #! ROTA DO ALGORITIMO
 @app.route('/algorithm')
@@ -140,6 +189,7 @@ def algorithm_calc():
     #Pegar o ID e nome do usuário
     user_log = current_user.usuario
     user_id = current_user.id
+    
     
     #*Conexão com o banco
     #* Código para pegar os valores do usuário
@@ -166,6 +216,7 @@ def algorithm_calc():
     instance_algorithm = alg(PH, fosforo, potassio, nitrogenio, rainfall, temp, water)
     result, porcent, veracid = instance_algorithm.calc()
     
+    
     #*Guardando informações
     Session = sessionmaker(bind=engine)
     session = Session()
@@ -177,7 +228,8 @@ def algorithm_calc():
     session.close()
     #estatisticas = instance_algorithm.estatistic_culture(result)
     mean_temperature, std_dev_temperature, mean_humidity, std_dev_humidity, mean_PH, std_dev_PH, mean_rainfall, std_dev_rainfall, mean_nitrogen, std_dev_nitrogen, mean_fosforo, std_dev_fosforo, mean_potassio, std_dev_potassio = instance_algorithm.estatistic_culture(result)
-    #Deixando os números com 2 casas decimais
+    
+    #Deixando os números com 2 casas decimais - MÉDIA
     mean_temperature = round(mean_temperature, 2)
     mean_humidity = round(mean_humidity, 2)
     mean_fosforo = round(mean_fosforo, 2)
@@ -185,7 +237,30 @@ def algorithm_calc():
     mean_PH = round(mean_PH, 2)
     mean_potassio = round(mean_potassio, 2)
     mean_rainfall = round(mean_rainfall, 2)
+    
+    #* Verificar diferenças
+    dif_PH = PH - mean_PH
+    dif_PH = round(dif_PH, 2)
+    
+    dif_fosforo = fosforo - mean_fosforo
+    dif_fosforo = round(dif_fosforo, 2)
+    
+    dif_potassio = potassio - mean_potassio
+    dif_potassio = round(dif_potassio, 2)
+    
+    dif_nitrogenio = nitrogenio - mean_nitrogen
+    dif_nitrogenio = round(dif_nitrogenio, 2)
+    
+    dif_rainfall = rainfall - mean_rainfall
+    dif_rainfall = round(dif_rainfall, 2)
+    
+    dif_temp = temp - mean_temperature
+    dif_temp = round(dif_temp, 2)
+    
+    dif_water = water - mean_humidity
+    dif_water = round(dif_water, 2)
 
+    #Deixando os números com 2 casas decimais - DESVIO PADRÃO
     std_dev_temperature = round(std_dev_temperature, 2)
     std_dev_fosforo = round(std_dev_fosforo, 2)
     std_dev_humidity = round(std_dev_humidity, 2)
@@ -247,7 +322,15 @@ def algorithm_calc():
                            std_dev_potassio=std_dev_potassio,
                            veracid=veracid,
                            graphic = fig.to_html(full_html=False),
-                           user_log=user_log)
+                           user_log=user_log,
+                           dif_PH=dif_PH,
+                           dif_fosforo=dif_fosforo,
+                           dif_potassio=dif_potassio,
+                           dif_nitrogenio=dif_nitrogenio,
+                           dif_rainfall=dif_rainfall,
+                           dif_temp=dif_temp,
+                           dif_water=dif_water)
+
 
 
 if __name__ == '__main__':

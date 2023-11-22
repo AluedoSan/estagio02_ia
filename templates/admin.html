@@ -10,11 +10,17 @@
 <body>
     <nav>
         <h1>Administrador</h1>
+        <div class="links"><a href="{{ url_for('log_out')}}">SAIR</a></div>
     </nav>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+        <div class="flash_message">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
     <div class="order">
         <button class="button" type="button" id="add">+ADICIONAR</button>
-        <button class="button" type="button">-REMOVER</button>
-
             <form action="/admin" style="display: none;" id="form_add" method="POST">
                 <input type="text" name="users" id="users" placeholder="usuário">
                 <input type="email" name="emails" id="emails" placeholder="e-mail">
@@ -33,6 +39,7 @@
                     <th>E-MAIL</th>
                     <th>ADMINISTRADOR</th>
                     <th>CRIADO EM</th>
+                    <th>CONFIG</th>
                 </tr>
             </thead>
             
@@ -41,11 +48,17 @@
             <tr>
                 <td>{{users['usuario']}}</td>
                 <td>{{users['email']}}</td>
-                <td></td>
-                <td></td>
+                <td>{{user_name}}</td>
+                <td>{{users['create_user']}}</td>
+                <form action="/delete" id="form_delete" method="POST">
+                <td>
+                    <input type="hidden" name="user_id" value="{{users.id}}">
+                    <button class="button" type="submit">-REMOVER</button>
+                </td>
+                </form>
             </tr>
             {%endfor%}
-        </tbody>
+            </tbody>
         </table>
     </main>
     <script>

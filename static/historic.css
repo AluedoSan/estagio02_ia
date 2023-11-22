@@ -48,20 +48,20 @@ p{
     font-family: Arial, Helvetica, sans-serif;
     font-size: 115%;
     text-align: center;
+    color: white;
+    background: #ffffff2c;
 }
 
 table{
-    display: grid;
-    justify-items: center;
     font-family: Arial, Helvetica, sans-serif;
     justify-content: center;
-    margin-top: 20vh;
+    margin-top: 24vh;
 }
 
 th, td{
     border-radius: 5px;
     background: #bcffc3;
-    padding: 1vh 8vh 1vh 8vh;
+    padding: 1vh 6vh 1vh 6vh;
     text-align: center;
 }
 
@@ -84,3 +84,17 @@ caption{
 .headers{
     padding: 1.5vh;
 }
+
+#user{
+    background-color: rgba(255, 255, 255, 0);
+}
+
+button{
+    cursor: pointer;
+}
+
+#pagination {
+    text-align: center;
+    margin-top: 10px;
+  }
+  
