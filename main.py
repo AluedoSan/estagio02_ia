@@ -7,7 +7,7 @@ import plotly.express as px
 import pandas as pd
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from datetime import date
-from sqlalchemy_pagination import paginate
+from sqlalchemy_pagination import paginate, Page
 from flask_bcrypt import Bcrypt, check_password_hash
 import time
 
@@ -153,24 +153,11 @@ def delete():
 def historic():
     user_id = current_user.id
     user_name = current_user.usuario
-
-    # Página atual (padrão: 1)
-    page = request.args.get('page', 1, type=int)
-    
-    # Itens por página (padrão: 5)
-    per_page = 5
-
     Session = sessionmaker(bind=engine)
     session = Session()
-    
-    # Consulta sem a chamada direta de paginate no objeto Query
-    query = session.query(Algoritimo_BD).filter_by(user_id=user_id)
-
-    # Utilizando a função paginate
-    paginated_query = paginate(query, page, per_page)
-
-
-    return render_template('historic.html', paginated_query=paginated_query, user_name=user_name)
+    id_of_user = session.query(Algoritimo_BD).filter_by(user_id=user_id)
+    session.close()
+    return render_template('historic.html', id_of_user = id_of_user, user_name=user_name)
 
 
 
@@ -303,6 +290,172 @@ def algorithm_calc():
     fig.update_xaxes(title='Variável')
     fig.update_yaxes(title='Valor')
     
+    #! Detalhes da cultura
+    cultures = {
+        "arroz": {
+            "name": "arroz",
+            "soil": "argilosos, latossolos ou nitossolos, bem drenados e ricos em matéria orgânica",
+            "altitude": "entre 300 e 600 metros",
+            "climate": "Tropical, subtropical ou temperado",
+            "irrigation": "inundação, subirrigação e aspersão"
+        },
+        "milho": {
+            "name": "milho",
+            "soil": "argilosos, latossolos ou siltosos, bem drenados e ricos em matéria orgânica",
+            "altitude": "abaixo de 400 ou acima de 700 metros",
+            "climate": "Tropical, subtropical ou temperado",
+            "irrigation": "sulco"
+        },
+        "grão de bico": {
+            "name": "grão de bico",
+            "soil": "silicoargilosa, bem drenados e ricos em matéria orgânica",
+            "altitude": "entre 640 a 760 metros",
+            "climate": "subtropical ou temperado",
+            "irrigation": "oscilando entre 490 kg/ha a 820 kg/ha"
+        },
+        "feijão": {
+            "name": "feijão",
+            "soil": "solos soltos, leves, de textura areno-argiosa, mais ou menos profundos, ricos em matéria orgânica e em elementos fertilizantes",
+            "altitude": "0 a 1500 metros",
+            "climate": "subtropical",
+            "irrigation": "aspersão"
+        },
+        "feijão bóer": {
+            "name": "feijão bóer",
+            "soil": "drenados e profundos",
+            "altitude": "0 a 1500 metros",
+            "climate": "subtropical e tropical",
+            "irrigation": "autopropelido e pivô central"
+        },
+        "feijão traça": {
+            "name": "feijão traça",
+            "soil": "Solos argilosos, arenosos ou siltosos, bem drenados e ricos em matéria orgânica.",
+            "altitude": "0 a 1500 metros",
+            "climate": "subtropical e tropical",
+            "irrigation": "Necessária em regiões com clima seco."
+        },
+        "feijão mungo": {
+            "name": "feijão mungo",
+            "soil": "Solos argilosos",
+            "altitude": "640 até 1800 metros",
+            "climate": "tropical",
+            "irrigation": "Necessária em regiões com clima seco."
+        },
+        "vigna mungo": {
+            "name": "vigna mungo",
+            "soil": "Solos argilosos, ricos em matéria orgânica.",
+            "altitude": "0 a 1500 metros",
+            "climate": "subtropical e tropical",
+            "irrigation": "Necessária em regiões com clima seco."
+        },
+        "lentilha": {
+            "name": "lentilha",
+            "soil": "Alta fertilidade, boa drenagem e boa carga de matéria orgânica.",
+            "altitude": "0 a 3800 metros",
+            "climate": "subtropical",
+            "irrigation": "Necessária de maneira frequente."
+        },
+        "romã": {
+            "name": "romã",
+            "soil": "Abundante em matéria orgânica.",
+            "altitude": "0 a 1600 metros",
+            "climate": "subtropical e tropical",
+            "irrigation": "Frequente até o pagamento da plata, sendo assim depois disso de 2 dias e depois até 7 dias."
+        },
+        "banana": {
+            "name": "banana",
+            "soil": "areno-argilosos, ricos em matéria orgânica, com boa profundidade, plano ou levemente inclinado, não sujeitos a inundação",
+            "altitude": "0 a 300 metros",
+            "climate": "subtropical e tropical",
+            "irrigation": "aspersão convencional."
+        },
+        "manga": {
+            "name": "manga",
+            "soil": "média fertilidade, de arenosos até argilosos, porém preferencialmente areno-argilosos, profundos, permeáveis, bem drenados, ligeiramente ácidos",
+            "altitude": "0 a 1200 metros",
+            "climate": "subtropical e tropical",
+            "irrigation": "mínimo 50L de água."
+        },
+        "uva": {
+            "name": "uva",
+            "soil": "solos soltos e bem drenados com uma pequena porcentagem de cascalho",
+            "altitude": "64 a 2473 metros",
+            "climate": "subtropical",
+            "irrigation": "Em falta de chuva, uma vez por semana."
+        },
+        "melancia": {
+            "name": "melancia",
+            "soil": "leve, fértil, com boa quantidade de nitrogênio",
+            "altitude": "800 metros",
+            "climate": "subtropical",
+            "irrigation": "aspersão e gotejamento."
+        },
+        "melão almiscarado": {
+            "name": "melão almiscarado",
+            "soil": "areno-argilosos, soltos, profundos, bem drenados e ricos em húmus",
+            "altitude": "0 a 1000 metros",
+            "climate": "ameno",
+            "irrigation": "aspersão e gotejamento."
+        },
+        "maça": {
+            "name": "maça",
+            "soil": "argiloso ou argiloso-arenoso",
+            "altitude": "1200 a 1400 metros",
+            "climate": "frio e úmido",
+            "irrigation": "1 vez por dia."
+        },
+        "laranja": {
+            "name": "laranja",
+            "soil": "arenoargiloso, profundo, com alta fertilidade, boa drenagem.",
+            "altitude": "20 a 500 metros",
+            "climate": "tropical e subtropical",
+            "irrigation": "Gotejamento."
+        },
+        "mamão": {
+            "name": "mamão",
+            "soil": "fertilidade elevada e boa drenagem para evitar encharcamentos.",
+            "altitude": "acima de 200 metros",
+            "climate": "tropical",
+            "irrigation": "métodos de pressurizados."
+        },
+        "coco": {
+            "name": "coco",
+            "soil": "arenoso e bem drenado.",
+            "altitude": "acima de 400 metros",
+            "climate": "tropical",
+            "irrigation": "100 a 240 litros por dia."
+        },
+        "algodão": {
+            "name": "algodão",
+            "soil": "arenosos, drenados, com bastante argila e matéria orgânica.",
+            "altitude": "entre 200 a 1000 metros.",
+            "climate": "quente e úmido.",
+            "irrigation": "localizadas ou por aspersão."
+        },
+        "juta": {
+            "name": "juta",
+            "soil": " fertilidade elevada.",
+            "altitude": "acima de 200 metros",
+            "climate": "tropical e úmido",
+            "irrigation": "métodos de irrigação mecanizadas."
+        },
+        "café": {
+            "name": "café",
+            "soil": "bem drenados e aerados, ricos em nutrientes e matéria orgânica.",
+            "altitude": "entre 600 a 1200 metros.",
+            "climate": "tropical",
+            "irrigation": "Gotejamento."
+        },
+    }
+    
+    selected_culture = None
+
+    # Procurar a correspondência na string result
+    for culture_name, values in cultures.items():
+        if result == culture_name:
+            selected_culture = values
+            break
+    
 
     return render_template("algorithm.html",result = result, porcent = porcent, PH=PH, potassio = potassio, 
                            fosforo = fosforo, rainfall = rainfall, nitrogenio = nitrogenio, temp = temp,
@@ -329,7 +482,8 @@ def algorithm_calc():
                            dif_nitrogenio=dif_nitrogenio,
                            dif_rainfall=dif_rainfall,
                            dif_temp=dif_temp,
-                           dif_water=dif_water)
+                           dif_water=dif_water,
+                           selected_culture = selected_culture)
 
 
 

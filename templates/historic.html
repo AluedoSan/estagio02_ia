@@ -13,7 +13,7 @@
     <nav class="column">
       <i class='bx bxs-leaf' style='color:#06ff02d3'></i>
       <br>
-      <div class="links"><a href="{{ url_for('algorithm_screen')}}">ALGORITIMO</a></div>
+      <button onclick="voltarPagina()">ALGORITIMO</button>
       <div class="links"><a href="{{ url_for('log_out')}}">SAIR</a></div>
       <hr>
       <p>HISTÓRICO</p>
@@ -24,47 +24,76 @@
  
     <main class="column">
       <table>
-        <thead>
-          <tr>
-            <th class="headers">ID</th>
-            <th class="headers">DATA</th>
-            <th class="headers">PH</th>
-            <th class="headers">FÓSFORO</th>
-            <th class="headers">POTÁSSIO</th>
-            <th class="headers">NITROGÊNIO</th>
-            <th class="headers">CHUVA</th>
-            <th class="headers">TEMPERATURA</th>
-            <th class="headers">UMIDADE</th>
-            <th class="headers">RESULTADO</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for item in paginated_query.items %}
-            <tr>
-              <td>{{ item.id }}</td>
-              <td>{{ item.data }}</td>
-              <td>{{ item.ph }}</td>
-              <td>{{ item.p }}</td>
-              <td>{{ item.k }}</td>
-              <td>{{ item.n }}</td>
-              <td>{{ item.chuva }}</td>
-              <td>{{ item.temper }}</td>
-              <td>{{ item.umid }}</td>
-              <td>{{ item.resultado }}</td>
-            </tr>
+        <tr>
+          <th class="headers"></th>
+          {% for id_of_user in id_of_user %}
+          <td>{{id_of_user['data']}}</td>
           {% endfor %}
-        </tbody>
+        </tr>
+        <tr>
+          <th class="headers">DATA</th>
+          {% for id_of_user in id_of_user %}
+          <td>{{id_of_user['data']}}</td>
+          {% endfor %}
+        </tr>
+        <tr>
+          <th class="headers">PH</th>
+          {% for id_of_user in id_of_user %}
+          <td>{{id_of_user['ph']}}</td>
+          {% endfor %}
+        </tr>
+        <tr>
+          <th class="headers">FÓSFORO</th>
+          {% for id_of_user in id_of_user %}
+          <td>{{id_of_user['p']}}</td>
+          {% endfor %}
+        </tr>
+        <tr>
+          <th class="headers">POTÁSSIO</th>
+          {% for id_of_user in id_of_user %}
+          <td>{{id_of_user['k']}}</td>
+          {% endfor %}
+        </tr>
+        <tr>
+          <th class="headers">NITROGÊNIO</th>
+          {% for id_of_user in id_of_user %}
+          <td>{{id_of_user['n']}}</td>
+          {% endfor %}
+        </tr>
+        <tr>
+          <th class="headers">CHUVA</th>
+          {% for id_of_user in id_of_user %}
+          <td>{{id_of_user['chuva']}}</td>
+          {% endfor %}
+        </tr>
+        <tr>
+          <th class="headers">TEMPERATURA</th>
+          {% for id_of_user in id_of_user %}
+          <td>{{id_of_user['temper']}}</td>
+          {% endfor %}
+        </tr>
+        <tr>
+          <th class="headers">UMIDADE</th>
+          {% for id_of_user in id_of_user %}
+          <td>{{id_of_user['umid']}}</td>
+          {% endfor %}
+        </tr>
+        <tr>
+          <th class="headers">RESULTADO</th>
+          {% for id_of_user in id_of_user %}
+          <td>{{id_of_user['resultado']}}</td>
+          {% endfor %}
+        </tr>
       </table>
 
-      <ul>
-        {% if paginated_query.has_prev %}
-        <li><a href="{{ url_for('historic', page=paginated_query.prev_num) }}">Anterior</a></li>
-        {% endif %}
-        {% if paginated_query.has_next %}
-        <li><a href="{{ url_for('historic', page=paginated_query.next_num) }}">Próxima</a></li>
-        {% endif %}
-    </ul>
     </main>
   </div>
+  
+<script>
+  // Função para voltar para a página anterior com a ultima execução
+  function voltarPagina() {
+    history.back();
+  }
+</script>
 </body>
 </html>

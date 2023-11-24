@@ -10,7 +10,6 @@ body{
     min-height: 97vh;
 }
 .column {
-    background: rgb(35,136,67);
     background: radial-gradient(circle, rgba(35,136,67,1) 0%, rgba(32,120,104,1) 100%);
     padding: 2px;
     border: 1px solid #ccc;
@@ -90,7 +89,17 @@ caption{
 }
 
 button{
+    border: none;
+    background-color: rgba(0, 0, 0, 0);
     cursor: pointer;
+    text-decoration: none;
+    color: black;
+    font-size: 115%;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+button:hover{
+    color: white;
 }
 
 #pagination {
